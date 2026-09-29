@@ -1,0 +1,2348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Tree of Reality — From Existence to Meta-Reality</title>
+
+<meta name="description"
+content="TREE OF REALITY — an interactive civilization-scale map of reality, nature, life, humanity, civilization, modernity and future humanity.">
+
+<style>
+:root{
+  --bg:#050608;
+  --bg2:#090d0d;
+  --panel:rgba(15,20,20,.78);
+  --panel2:rgba(20,27,26,.68);
+  --line:rgba(255,255,255,.09);
+  --line2:rgba(255,255,255,.15);
+  --text:#eef3ef;
+  --muted:#9ba8a3;
+  --soft:#c9d3cf;
+  --accent:#b7d4c2;
+  --accent2:#789b88;
+  --gold:#c9ad73;
+  --danger:#b77d72;
+  --shadow:0 25px 80px rgba(0,0,0,.45);
+  --radius:22px;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(76,111,91,.13),transparent 32%),
+    radial-gradient(circle at 90% 60%,rgba(109,87,47,.08),transparent 28%),
+    var(--bg);
+  color:var(--text);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:999;
+  opacity:.035;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,.5) 0px,
+      rgba(255,255,255,.5) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+button,
+input{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+/* --------------------------------------------------
+   LOADER
+-------------------------------------------------- */
+
+#loader{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  background:#030404;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:opacity 1s ease,visibility 1s ease;
+}
+
+#loader.hidden{
+  opacity:0;
+  visibility:hidden;
+}
+
+.loader-inner{
+  width:min(500px,80%);
+  text-align:center;
+}
+
+.loader-mark{
+  width:70px;
+  height:70px;
+  margin:0 auto 30px;
+  border:1px solid rgba(183,212,194,.35);
+  border-radius:50%;
+  position:relative;
+}
+
+.loader-mark::before,
+.loader-mark::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:1px;
+  height:90px;
+  background:linear-gradient(
+    transparent,
+    var(--accent),
+    transparent
+  );
+  transform-origin:center;
+}
+
+.loader-mark::before{
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+
+.loader-mark::after{
+  transform:translate(-50%,-50%) rotate(-45deg);
+}
+
+.loader-title{
+  letter-spacing:.35em;
+  font-size:.75rem;
+  color:var(--soft);
+  text-transform:uppercase;
+}
+
+.loader-bar{
+  height:1px;
+  background:rgba(255,255,255,.1);
+  margin-top:24px;
+  overflow:hidden;
+}
+
+.loader-progress{
+  width:0%;
+  height:100%;
+  background:var(--accent);
+  animation:loading 1.8s ease forwards;
+}
+
+@keyframes loading{
+  to{width:100%}
+}
+
+/* --------------------------------------------------
+   NAVIGATION
+-------------------------------------------------- */
+
+.nav{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:76px;
+  z-index:900;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 34px;
+  background:linear-gradient(
+    to bottom,
+    rgba(3,5,5,.92),
+    rgba(3,5,5,.5),
+    transparent
+  );
+  backdrop-filter:blur(10px);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  font-size:.72rem;
+  letter-spacing:.24em;
+  text-transform:uppercase;
+}
+
+.brand-symbol{
+  width:27px;
+  height:27px;
+  border:1px solid rgba(183,212,194,.45);
+  border-radius:50%;
+  position:relative;
+}
+
+.brand-symbol::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:0;
+  bottom:0;
+  width:1px;
+  background:var(--accent);
+  transform:rotate(35deg);
+}
+
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+.nav-btn{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.025);
+  color:var(--soft);
+  border-radius:30px;
+  padding:8px 14px;
+  font-size:.72rem;
+  letter-spacing:.08em;
+  transition:.25s;
+}
+
+.nav-btn:hover{
+  border-color:var(--line2);
+  background:rgba(255,255,255,.06);
+}
+
+/* --------------------------------------------------
+   HERO
+-------------------------------------------------- */
+
+.hero{
+  min-height:100vh;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.hero-bg{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+}
+
+.orbit{
+  position:absolute;
+  border:1px solid rgba(183,212,194,.07);
+  border-radius:50%;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+}
+
+.orbit.one{
+  width:500px;
+  height:500px;
+}
+
+.orbit.two{
+  width:760px;
+  height:760px;
+}
+
+.orbit.three{
+  width:1100px;
+  height:1100px;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 55%,
+      var(--bg) 100%
+    );
+  pointer-events:none;
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  width:min(1100px,90%);
+  text-align:center;
+  padding-top:50px;
+}
+
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  color:var(--muted);
+  font-size:.68rem;
+  text-transform:uppercase;
+  letter-spacing:.34em;
+  margin-bottom:30px;
+}
+
+.eyebrow::before,
+.eyebrow::after{
+  content:"";
+  width:45px;
+  height:1px;
+  background:var(--line2);
+}
+
+.hero h1{
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:400;
+  font-size:clamp(4rem,12vw,10rem);
+  line-height:.85;
+  letter-spacing:-.065em;
+  margin:0;
+  background:linear-gradient(
+    120deg,
+    #ffffff,
+    #b8c9bf 45%,
+    #758b80
+  );
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.hero-subtitle{
+  max-width:720px;
+  margin:45px auto 0;
+  color:var(--soft);
+  font-size:clamp(1rem,2vw,1.25rem);
+  line-height:1.8;
+}
+
+.hero-line{
+  width:1px;
+  height:100px;
+  margin:60px auto 0;
+  background:linear-gradient(
+    var(--accent),
+    transparent
+  );
+}
+
+.scroll-cue{
+  margin-top:20px;
+  color:var(--muted);
+  font-size:.65rem;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+}
+
+/* --------------------------------------------------
+   INTRO
+-------------------------------------------------- */
+
+.section{
+  width:min(1400px,92%);
+  margin:0 auto;
+  padding:130px 0;
+}
+
+.intro-grid{
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:70px;
+  align-items:end;
+}
+
+.section-label{
+  color:var(--accent2);
+  text-transform:uppercase;
+  letter-spacing:.25em;
+  font-size:.66rem;
+  margin-bottom:20px;
+}
+
+.intro-title{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(2.5rem,5vw,5rem);
+  font-weight:400;
+  line-height:1;
+  letter-spacing:-.045em;
+  margin:0;
+}
+
+.intro-text{
+  color:var(--muted);
+  font-size:1rem;
+  line-height:1.9;
+}
+
+.manifesto{
+  margin-top:100px;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  padding:50px 0;
+  text-align:center;
+}
+
+.manifesto p{
+  margin:0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(1.7rem,4vw,3.5rem);
+  line-height:1.25;
+  color:#dce5df;
+}
+
+/* --------------------------------------------------
+   TREE VISUAL
+-------------------------------------------------- */
+
+.tree-section{
+  position:relative;
+  overflow:hidden;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(87,121,101,.08),
+      transparent 55%
+    );
+}
+
+.tree-heading{
+  text-align:center;
+  margin-bottom:70px;
+}
+
+.tree-heading h2{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(2.5rem,5vw,5rem);
+  font-weight:400;
+  margin:0;
+}
+
+.tree-heading p{
+  color:var(--muted);
+}
+
+.tree-map{
+  position:relative;
+  min-height:850px;
+  width:min(1250px,96%);
+  margin:auto;
+}
+
+.tree-trunk{
+  position:absolute;
+  left:50%;
+  top:50px;
+  bottom:50px;
+  width:2px;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent,
+      rgba(183,212,194,.45),
+      rgba(183,212,194,.15),
+      transparent
+    );
+  transform:translateX(-50%);
+}
+
+.tree-node{
+  position:absolute;
+  width:180px;
+  min-height:70px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:rgba(7,10,10,.82);
+  backdrop-filter:blur(10px);
+  padding:13px;
+  transition:.35s;
+  z-index:3;
+}
+
+.tree-node:hover,
+.tree-node.active{
+  border-color:rgba(183,212,194,.45);
+  transform:scale(1.045);
+  background:rgba(20,29,26,.94);
+  box-shadow:0 15px 45px rgba(0,0,0,.4);
+}
+
+.tree-node .number{
+  color:var(--accent2);
+  font-size:.6rem;
+  letter-spacing:.15em;
+}
+
+.tree-node .name{
+  display:block;
+  margin-top:4px;
+  font-size:.8rem;
+  color:#e1e9e4;
+}
+
+.tree-node.left{
+  left:calc(50% - 430px);
+}
+
+.tree-node.right{
+  right:calc(50% - 430px);
+}
+
+.tree-node.center{
+  left:50%;
+  transform:translateX(-50%);
+}
+
+.tree-node.center:hover,
+.tree-node.center.active{
+  transform:translateX(-50%) scale(1.045);
+}
+
+.tree-branch{
+  position:absolute;
+  height:1px;
+  background:rgba(183,212,194,.16);
+  width:250px;
+  z-index:1;
+}
+
+.branch-left{
+  left:calc(50% - 250px);
+}
+
+.branch-right{
+  left:50%;
+}
+
+/* --------------------------------------------------
+   EXPLORER
+-------------------------------------------------- */
+
+.explorer-section{
+  padding-top:150px;
+}
+
+.explorer-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:30px;
+  margin-bottom:35px;
+}
+
+.explorer-header h2{
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:400;
+  font-size:clamp(2.5rem,5vw,4.5rem);
+  margin:0;
+}
+
+.search-wrap{
+  width:min(380px,100%);
+}
+
+.search{
+  width:100%;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.035);
+  color:var(--text);
+  padding:14px 17px;
+  border-radius:12px;
+  outline:none;
+}
+
+.search:focus{
+  border-color:rgba(183,212,194,.4);
+}
+
+.explorer{
+  display:grid;
+  grid-template-columns:310px 1fr;
+  min-height:760px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  overflow:hidden;
+  background:rgba(8,11,11,.75);
+  box-shadow:var(--shadow);
+}
+
+.layer-list{
+  border-right:1px solid var(--line);
+  overflow:auto;
+  max-height:760px;
+}
+
+.layer-item{
+  width:100%;
+  text-align:left;
+  border:0;
+  border-bottom:1px solid rgba(255,255,255,.045);
+  background:transparent;
+  color:var(--muted);
+  padding:16px 20px;
+  transition:.2s;
+}
+
+.layer-item:hover{
+  background:rgba(255,255,255,.035);
+  color:var(--text);
+}
+
+.layer-item.active{
+  background:rgba(122,157,137,.1);
+  color:#e6eee9;
+  border-left:2px solid var(--accent);
+}
+
+.layer-item .small-number{
+  display:inline-block;
+  width:30px;
+  color:var(--accent2);
+  font-size:.65rem;
+}
+
+.layer-item .small-name{
+  font-size:.78rem;
+}
+
+.detail{
+  padding:55px;
+  overflow:auto;
+}
+
+.detail-top{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  align-items:flex-start;
+}
+
+.layer-number{
+  color:var(--accent2);
+  letter-spacing:.22em;
+  font-size:.65rem;
+  text-transform:uppercase;
+}
+
+.detail h3{
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(2.5rem,5vw,5rem);
+  font-weight:400;
+  letter-spacing:-.04em;
+  margin:8px 0 20px;
+  line-height:1;
+}
+
+.layer-thesis{
+  color:#d5ded9;
+  font-size:1.15rem;
+  max-width:850px;
+  line-height:1.8;
+}
+
+.layer-description{
+  color:var(--muted);
+  max-width:900px;
+  margin:25px 0 45px;
+  line-height:1.9;
+}
+
+.domain-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.domain{
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:rgba(255,255,255,.025);
+  overflow:hidden;
+}
+
+.domain summary{
+  padding:17px 19px;
+  cursor:pointer;
+  color:#dce5df;
+  font-size:.84rem;
+}
+
+.domain-content{
+  padding:0 19px 19px;
+  color:var(--muted);
+  font-size:.78rem;
+  line-height:1.8;
+}
+
+.why-box{
+  margin-top:35px;
+  padding:28px;
+  border-left:2px solid var(--accent);
+  background:rgba(121,155,135,.06);
+}
+
+.why-box strong{
+  display:block;
+  font-size:.65rem;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+}
+
+.why-box p{
+  margin:0;
+  color:#cbd7d1;
+}
+
+.connections{
+  margin-top:35px;
+}
+
+.connections-title{
+  color:var(--muted);
+  font-size:.65rem;
+  text-transform:uppercase;
+  letter-spacing:.2em;
+  margin-bottom:12px;
+}
+
+.connection-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.connection{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.025);
+  border-radius:30px;
+  padding:7px 12px;
+  color:var(--soft);
+  font-size:.68rem;
+}
+
+.detail-controls{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:45px;
+  padding-top:25px;
+  border-top:1px solid var(--line);
+}
+
+.control-btn{
+  border:1px solid var(--line);
+  background:transparent;
+  color:var(--soft);
+  padding:10px 15px;
+  border-radius:10px;
+  transition:.2s;
+}
+
+.control-btn:hover{
+  background:rgba(255,255,255,.06);
+  border-color:var(--line2);
+}
+
+.progress{
+  color:var(--muted);
+  font-size:.68rem;
+  letter-spacing:.1em;
+}
+
+/* --------------------------------------------------
+   TIMELINE
+-------------------------------------------------- */
+
+.timeline-section{
+  padding-top:160px;
+}
+
+.timeline{
+  position:relative;
+  margin-top:70px;
+  padding-bottom:40px;
+}
+
+.timeline-line{
+  position:absolute;
+  top:28px;
+  left:0;
+  right:0;
+  height:1px;
+  background:var(--line2);
+}
+
+.timeline-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:25px;
+  position:relative;
+}
+
+.time-item{
+  position:relative;
+  padding-top:60px;
+}
+
+.time-dot{
+  position:absolute;
+  top:21px;
+  left:0;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  border:1px solid var(--accent);
+  background:var(--bg);
+  box-shadow:0 0 0 7px rgba(183,212,194,.04);
+}
+
+.time-number{
+  color:var(--accent2);
+  font-size:.65rem;
+  letter-spacing:.18em;
+}
+
+.time-item h4{
+  margin:8px 0;
+  font-size:.9rem;
+}
+
+.time-item p{
+  color:var(--muted);
+  font-size:.75rem;
+}
+
+/* --------------------------------------------------
+   CROWN
+-------------------------------------------------- */
+
+.crown{
+  min-height:90vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  border-top:1px solid var(--line);
+  position:relative;
+  overflow:hidden;
+}
+
+.crown::before{
+  content:"";
+  position:absolute;
+  width:900px;
+  height:900px;
+  border-radius:50%;
+  border:1px solid rgba(183,212,194,.06);
+}
+
+.crown-content{
+  width:min(1000px,90%);
+  position:relative;
+}
+
+.crown-label{
+  color:var(--accent2);
+  font-size:.65rem;
+  text-transform:uppercase;
+  letter-spacing:.3em;
+}
+
+.crown h2{
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:400;
+  font-size:clamp(3rem,7vw,7rem);
+  line-height:.95;
+  letter-spacing:-.055em;
+  margin:30px 0;
+}
+
+.crown p{
+  max-width:700px;
+  margin:auto;
+  color:var(--muted);
+  font-size:1rem;
+  line-height:1.9;
+}
+
+/* --------------------------------------------------
+   FOOTER
+-------------------------------------------------- */
+
+footer{
+  border-top:1px solid var(--line);
+  padding:35px 5%;
+  display:flex;
+  justify-content:space-between;
+  gap:30px;
+  color:#68736f;
+  font-size:.65rem;
+  letter-spacing:.08em;
+}
+
+footer strong{
+  color:#a7b4ae;
+}
+
+/* --------------------------------------------------
+   MODAL / HELP
+-------------------------------------------------- */
+
+.help{
+  position:fixed;
+  right:25px;
+  bottom:25px;
+  z-index:500;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:1px solid var(--line2);
+  background:rgba(8,11,11,.85);
+  color:var(--soft);
+}
+
+.help-panel{
+  position:fixed;
+  right:25px;
+  bottom:80px;
+  width:280px;
+  padding:20px;
+  background:#0b0f0e;
+  border:1px solid var(--line2);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(10px);
+  transition:.25s;
+  z-index:499;
+}
+
+.help-panel.show{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0);
+}
+
+.help-panel h4{
+  margin:0 0 15px;
+}
+
+.help-panel p{
+  color:var(--muted);
+  font-size:.75rem;
+  line-height:1.7;
+}
+
+/* --------------------------------------------------
+   REVEAL
+-------------------------------------------------- */
+
+.reveal{
+  opacity:0;
+  transform:translateY(35px);
+  transition:opacity .9s ease,transform .9s ease;
+}
+
+.reveal.visible{
+  opacity:1;
+  transform:none;
+}
+
+/* --------------------------------------------------
+   RESPONSIVE
+-------------------------------------------------- */
+
+@media(max-width:1000px){
+
+  .intro-grid{
+    grid-template-columns:1fr;
+    gap:30px;
+  }
+
+  .explorer{
+    grid-template-columns:230px 1fr;
+  }
+
+  .detail{
+    padding:35px;
+  }
+
+  .tree-map{
+    transform:scale(.82);
+    transform-origin:top center;
+    margin-bottom:-150px;
+  }
+
+  .timeline-grid{
+    grid-template-columns:repeat(3,1fr);
+    row-gap:45px;
+  }
+
+  .timeline-line{
+    display:none;
+  }
+
+}
+
+@media(max-width:700px){
+
+  .nav{
+    padding:0 18px;
+  }
+
+  .nav-right .nav-btn{
+    display:none;
+  }
+
+  .hero h1{
+    font-size:clamp(3.6rem,19vw,6rem);
+  }
+
+  .section{
+    width:90%;
+    padding:90px 0;
+  }
+
+  .tree-map{
+    transform:scale(.62);
+    transform-origin:top left;
+    width:160%;
+    margin-left:-30%;
+    margin-bottom:-330px;
+  }
+
+  .explorer-header{
+    display:block;
+  }
+
+  .search-wrap{
+    margin-top:25px;
+  }
+
+  .explorer{
+    display:block;
+  }
+
+  .layer-list{
+    border-right:0;
+    border-bottom:1px solid var(--line);
+    max-height:260px;
+  }
+
+  .detail{
+    padding:28px 22px;
+  }
+
+  .domain-grid{
+    grid-template-columns:1fr;
+  }
+
+  .timeline-grid{
+    grid-template-columns:1fr;
+  }
+
+  footer{
+    display:block;
+  }
+
+  footer div + div{
+    margin-top:12px;
+  }
+
+}
+
+/* --------------------------------------------------
+   ACCESSIBILITY
+-------------------------------------------------- */
+
+@media(prefers-reduced-motion:reduce){
+
+  html{
+    scroll-behavior:auto;
+  }
+
+  *,
+  *::before,
+  *::after{
+    animation:none !important;
+    transition:none !important;
+  }
+
+  .reveal{
+    opacity:1;
+    transform:none;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ==================================================
+     LOADER
+================================================== -->
+
+<div id="loader">
+  <div class="loader-inner">
+    <div class="loader-mark"></div>
+    <div class="loader-title">TREE OF REALITY</div>
+    <div class="loader-bar">
+      <div class="loader-progress"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================================================
+     NAVIGATION
+================================================== -->
+
+<nav class="nav">
+
+  <a href="#top" class="brand">
+    <span class="brand-symbol"></span>
+    TREE OF REALITY
+  </a>
+
+  <div class="nav-right">
+    <button class="nav-btn" onclick="scrollToExplorer()">
+      EXPLORE
+    </button>
+
+    <button class="nav-btn" onclick="randomLayer()">
+      RANDOM LAYER
+    </button>
+  </div>
+
+</nav>
+
+<!-- ==================================================
+     HERO
+================================================== -->
+
+<header class="hero" id="top">
+
+  <div class="hero-bg">
+    <div class="orbit one"></div>
+    <div class="orbit two"></div>
+    <div class="orbit three"></div>
+  </div>
+
+  <div class="hero-content">
+
+    <div class="eyebrow">
+      A MAP OF HUMAN REALITY
+    </div>
+
+    <h1>
+      Tree<br>
+      of Reality
+    </h1>
+
+    <p class="hero-subtitle">
+      From existence to meta-reality.
+      From the universe to the human mind.
+      From life to civilization.
+      From civilization to the world we are building next.
+    </p>
+
+    <div class="hero-line"></div>
+
+    <div class="scroll-cue">
+      Enter the tree
+    </div>
+
+  </div>
+
+</header>
+
+<!-- ==================================================
+     INTRO
+================================================== -->
+
+<section class="section reveal">
+
+  <div class="intro-grid">
+
+    <div>
+      <div class="section-label">
+        THE ROOT PROPOSITION
+      </div>
+
+      <h2 class="intro-title">
+        Reality exists before the stories we tell about it.
+      </h2>
+    </div>
+
+    <div class="intro-text">
+
+      <p>
+        The Tree of Reality is an attempt to construct a continuous
+        educational map of existence — beginning with the most fundamental
+        questions of being and moving gradually toward nature, life,
+        humanity, civilization, technology, the modern world and possible
+        futures.
+      </p>
+
+      <p>
+        It is not intended to be a final classification of knowledge.
+        It is a navigational architecture: a way to ask what came before,
+        what depends upon what, what emerged from what, and how increasingly
+        complex worlds became possible.
+      </p>
+
+    </div>
+
+  </div>
+
+  <div class="manifesto">
+
+    <p>
+      Reality → Nature → Life → Humanity → Civilization → Modern World
+    </p>
+
+  </div>
+
+</section>
+
+<!-- ==================================================
+     TREE MAP
+================================================== -->
+
+<section class="tree-section section reveal">
+
+  <div class="tree-heading">
+
+    <div class="section-label">
+      THE ARCHITECTURE
+    </div>
+
+    <h2>
+      Twenty-Four Layers
+    </h2>
+
+    <p>
+      Roots, trunk, branches, human worlds and the reflective crown.
+    </p>
+
+  </div>
+
+  <div class="tree-map" id="treeMap">
+
+    <div class="tree-trunk"></div>
+
+  </div>
+
+</section>
+
+<!-- ==================================================
+     EXPLORER
+================================================== -->
+
+<section class="section explorer-section reveal" id="explorer">
+
+  <div class="explorer-header">
+
+    <div>
+      <div class="section-label">
+        INTERACTIVE KNOWLEDGE MAP
+      </div>
+
+      <h2>
+        Explore the Layers
+      </h2>
+    </div>
+
+    <div class="search-wrap">
+      <input
+        id="search"
+        class="search"
+        type="search"
+        placeholder="Search layers, concepts, domains..."
+        autocomplete="off"
+      >
+    </div>
+
+  </div>
+
+  <div class="explorer">
+
+    <aside class="layer-list" id="layerList"></aside>
+
+    <main class="detail" id="detail"></main>
+
+  </div>
+
+</section>
+
+<!-- ==================================================
+     TIMELINE
+================================================== -->
+
+<section class="section timeline-section reveal">
+
+  <div class="section-label">
+    FROM ROOT TO CROWN
+  </div>
+
+  <h2 class="intro-title">
+    A journey through scales of reality.
+  </h2>
+
+  <div class="timeline">
+
+    <div class="timeline-line"></div>
+
+    <div class="timeline-grid">
+
+      <div class="time-item">
+        <div class="time-dot"></div>
+        <div class="time-number">00</div>
+        <h4>Existence</h4>
+        <p>Being, time, space, distinction, information and consciousness.</p>
+      </div>
+
+      <div class="time-item">
+        <div class="time-dot"></div>
+        <div class="time-number">01—06</div>
+        <h4>Nature</h4>
+        <p>Universe, matter, Earth, life, biodiversity and ecosystems.</p>
+      </div>
+
+      <div class="time-item">
+        <div class="time-dot"></div>
+        <div class="time-number">07—10</div>
+        <h4>Human Organism</h4>
+        <p>Body, experience, development and survival.</p>
+      </div>
+
+      <div class="time-item">
+        <div class="time-dot"></div>
+        <div class="time-number">11—15</div>
+        <h4>Human Society</h4>
+        <p>Family, community, language, culture and knowledge.</p>
+      </div>
+
+      <div class="time-item">
+        <div class="time-dot"></div>
+        <div class="time-number">16—20</div>
+        <h4>Civilization</h4>
+        <p>Technology, economy, governance, civilization and creative worlds.</p>
+      </div>
+
+      <div class="time-item">
+        <div class="time-dot"></div>
+        <div class="time-number">21—23</div>
+        <h4>Future & Reflection</h4>
+        <p>Modernity, future humanity and meta-reality.</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ==================================================
+     CROWN
+================================================== -->
+
+<section class="crown reveal">
+
+  <div class="crown-content">
+
+    <div class="crown-label">
+      THE CROWN
+    </div>
+
+    <h2>
+      What should<br>
+      reality become?
+    </h2>
+
+    <p>
+      The Tree does not end with an answer.
+      It ends with a question.
+      Once humanity can understand the structures that produced its world,
+      it must confront the deeper question of what kind of world it wishes
+      to create.
+    </p>
+
+  </div>
+
+</section>
+
+<!-- ==================================================
+     FOOTER
+================================================== -->
+
+<footer>
+
+  <div>
+    <strong>TREE OF REALITY</strong>
+    — Interactive Knowledge Architecture
+  </div>
+
+  <div>
+    24 LAYERS · ROOT → CROWN
+  </div>
+
+</footer>
+
+<!-- ==================================================
+     HELP
+================================================== -->
+
+<button class="help" id="helpButton">?</button>
+
+<div class="help-panel" id="helpPanel">
+
+  <h4>Navigation</h4>
+
+  <p>
+    <strong>↑ ↓</strong> — move between layers
+  </p>
+
+  <p>
+    <strong>Home</strong> — first layer
+  </p>
+
+  <p>
+    <strong>End</strong> — final layer
+  </p>
+
+  <p>
+    <strong>/</strong> — focus search
+  </p>
+
+  <p>
+    Click any layer in the tree or explorer to investigate it.
+  </p>
+
+</div>
+
+<script>
+
+/* ==================================================
+   TREE OF REALITY DATABASE
+================================================== */
+
+const layers = [
+
+{
+id:0,
+name:"Existence",
+thesis:"Before nature, before life, before humanity, there is the question of existence itself.",
+description:"The philosophical and conceptual root of the entire tree. This layer asks what it means for anything to exist and introduces distinctions, patterns, relationships, systems, information and consciousness.",
+domains:[
+["Being & Existence","existence · non-existence · being · reality · possibility · necessity · identity"],
+["Space & Time","location · distance · direction · dimension · duration · past · present · future · change"],
+["Order & Uncertainty","order · chaos · randomness · patterns · regularity · probability"],
+["Complexity & Emergence","complexity · emergence · self-organization · feedback · systems"],
+["Foundational Distinctions","same/different · self/other · inside/outside · before/after · near/far · one/many"],
+["Information & Consciousness","information · memory · representation · awareness · experience · subjectivity"]
+],
+why:"Every later layer depends upon distinctions about what exists, where it exists, how it changes, and how it can be known.",
+connections:[1,2,8,15,23]
+},
+
+{
+id:1,
+name:"Universe",
+thesis:"Human existence occurs inside a universe vastly older and larger than humanity.",
+description:"Cosmology establishes the largest physical scale in the Tree: cosmic origins, expansion, structures, stars, planets and the fundamental interactions that organize the universe.",
+domains:[
+["Cosmology","Big Bang models · cosmic expansion · inflation · cosmic evolution"],
+["Cosmic Structures","galaxies · clusters · superclusters · cosmic web"],
+["Celestial Bodies","stars · planets · moons · asteroids · comets"],
+["Cosmic Forces","gravity · electromagnetism · strong interaction · weak interaction"],
+["Extreme Phenomena","black holes · supernovae · pulsars · quasars"],
+["Cosmic Signals","light · cosmic background · gravitational waves · radiation"]
+],
+why:"The Earth and humanity are local phenomena inside a much larger cosmic system.",
+connections:[0,2,3]
+},
+
+{
+id:2,
+name:"Matter & Energy",
+thesis:"The physical world is structured through matter, energy, fields, forces and transformations.",
+description:"Physics and chemistry explain how physical substances and energetic processes interact, combine, transform and organize.",
+domains:[
+["Mechanics","motion · velocity · acceleration · force · momentum"],
+["Thermodynamics","heat · temperature · energy transfer · entropy · equilibrium"],
+["Electromagnetism","electricity · magnetism · electromagnetic radiation · light"],
+["Quantum Reality","particles · fields · quantization · wave behavior · probability"],
+["Atomic Structure","protons · neutrons · electrons · atoms · isotopes"],
+["Chemistry","elements · molecules · bonds · reactions · acids · bases · redox"]
+],
+why:"Life and Earth are not outside physics and chemistry; they emerge from physical processes.",
+connections:[1,3,4,5]
+},
+
+{
+id:3,
+name:"Earth System",
+thesis:"Earth is not merely a planet beneath humanity; it is a dynamic interconnected system.",
+description:"The Earth system combines geology, water, atmosphere, climate and planetary cycles.",
+domains:[
+["Geosphere","minerals · rocks · mountains · plains · volcanoes · earthquakes · tectonics"],
+["Hydrosphere","oceans · rivers · lakes · groundwater · wetlands · ice"],
+["Atmosphere","air · weather · winds · storms · clouds · circulation"],
+["Climate","seasons · climate patterns · variability · long-term change"],
+["Earth Cycles","water cycle · carbon cycle · rock cycle · nutrient flows"],
+["Planetary Change","tectonics · erosion · sedimentation · sea-level change"]
+],
+why:"All terrestrial life depends upon Earth systems operating within viable conditions.",
+connections:[2,4,5,6,10]
+},
+
+{
+id:4,
+name:"Life",
+thesis:"At some point in Earth's history, chemistry became organized into processes capable of biological continuity.",
+description:"Life introduces replication, metabolism, cellular organization, heredity and evolution.",
+domains:[
+["Origin of Life","prebiotic chemistry · chemical evolution · abiogenesis hypotheses"],
+["Early Life","protocells · membranes · metabolism · replication · early cells"],
+["Evolution","variation · mutation · natural selection · genetic drift · gene flow"],
+["Adaptation","environmental pressures · traits · selection · fitness"],
+["Speciation","reproductive isolation · divergence · radiation · co-evolution"],
+["Extinction & Recovery","background extinction · mass extinction · recovery · opportunity"]
+],
+why:"Life creates a new kind of organized complexity capable of reproducing, adapting and evolving.",
+connections:[3,5,6,7]
+},
+
+{
+id:5,
+name:"Biodiversity",
+thesis:"Life diversifies into an enormous branching history of organisms and ecological strategies.",
+description:"Biodiversity maps the living branches that emerge through evolutionary history, while recognizing that biological classification changes with evidence.",
+domains:[
+["Domains of Life","Bacteria · Archaea · Eukaryotes"],
+["Plants","mosses · ferns · conifers · flowering plants · seed plants"],
+["Invertebrates","arthropods · insects · spiders · crustaceans · mollusks · worms"],
+["Vertebrates","fish · amphibians · reptiles · birds · mammals"],
+["Fungi & Microbial Worlds","fungi · mushrooms · yeasts · molds · protists · viruses"],
+["Evolutionary Classification","taxonomy · phylogeny · common ancestry · changing classifications"]
+],
+why:"Humanity is one branch within biodiversity rather than an independent category outside life.",
+connections:[4,6,7,10]
+},
+
+{
+id:6,
+name:"Ecosystems",
+thesis:"Organisms do not merely coexist; they participate in networks of energy, matter and relationships.",
+description:"Ecology studies relationships among organisms and their environments, from individual interactions to entire ecosystems.",
+domains:[
+["Ecological Relationships","predation · competition · cooperation · mutualism · parasitism"],
+["Habitats","forests · grasslands · wetlands · rivers · lakes · oceans · deserts · mountains"],
+["Ecological Roles","producers · consumers · decomposers · detritivores · keystone roles"],
+["Food Systems","food chains · food webs · trophic levels · energy flow"],
+["Nutrient Cycles","carbon · nitrogen · phosphorus · water · decomposition"],
+["System Dynamics","populations · communities · succession · resilience · disturbance"]
+],
+why:"Humans survive inside ecosystems and transform them, even when civilization makes that dependence invisible.",
+connections:[3,4,5,7,10,17,19]
+},
+
+{
+id:7,
+name:"Human Organism",
+thesis:"Humanity begins as a biological organism.",
+description:"This layer moves from ecological life into the biological architecture of Homo sapiens.",
+domains:[
+["Body Architecture","cells · tissues · organs · organ systems · homeostasis"],
+["Nervous System","neurons · networks · brain · perception · memory · attention"],
+["Major Systems","respiratory · circulatory · digestive · musculoskeletal · immune · endocrine"],
+["Reproduction","gametes · conception · pregnancy · birth · inheritance"],
+["Development","growth · maturation · aging · death"],
+["Human Variation","genetics · traits · populations · adaptation · biological diversity"]
+],
+why:"Before humans become citizens, workers, artists or political beings, they are living bodies.",
+connections:[4,6,8,9,10]
+},
+
+{
+id:8,
+name:"Human Experience",
+thesis:"A human being does not only exist physically; humans experience a world from the inside.",
+description:"This layer explores subjective reality: sensation, emotion, cognition, attention, memory, selfhood and consciousness.",
+domains:[
+["Sensation","vision · hearing · smell · taste · touch · balance · proprioception"],
+["Emotion","joy · fear · anger · sadness · love · curiosity · awe · attachment"],
+["Cognition","thinking · reasoning · problem solving · decision making · imagination"],
+["Attention & Memory","attention · working memory · long-term memory · recall · forgetting"],
+["Self","self-model · identity · agency · autobiographical memory"],
+["Consciousness","awareness · subjectivity · experience · inner life"]
+],
+why:"Civilization is ultimately made by organisms that experience, remember, imagine and assign meaning.",
+connections:[0,7,9,13,20,23]
+},
+
+{
+id:9,
+name:"Human Development",
+thesis:"Human beings change across the entire life course.",
+description:"Development connects biological maturation with cognitive, emotional, social and moral development.",
+domains:[
+["Life Stages","prenatal · infancy · childhood · adolescence · adulthood · elderhood · death"],
+["Physical Development","growth · motor development · puberty · aging"],
+["Cognitive Development","language · memory · reasoning · learning · executive functions"],
+["Social Development","attachment · relationships · belonging · cooperation"],
+["Emotional Development","emotion regulation · empathy · self-understanding"],
+["Moral Development","rules · fairness · responsibility · ethical reasoning"]
+],
+why:"The human organism becomes a socially and culturally capable person through development.",
+connections:[7,8,11,12,13,14]
+},
+
+{
+id:10,
+name:"Human Survival",
+thesis:"Before complex civilization, humans learned to survive by reading landscapes, organisms, seasons and risk.",
+description:"This layer describes fundamental human ecological survival: food, water, shelter, fire, tools, movement and protection.",
+domains:[
+["Food","hunting · gathering · fishing · foraging · seasonal foods · preservation"],
+["Water","finding water · carrying · purification · watersheds"],
+["Shelter","caves · huts · temporary structures · thermal protection"],
+["Protection","fire · tools · weapons · group defense · hazard avoidance"],
+["Human Ecology","animals · plants · seasons · landscapes · migration"],
+["Resource Knowledge","tracking · navigation · weather · materials · local ecology"]
+],
+why:"Civilization did not replace survival; it reorganized survival into increasingly complex institutions and infrastructures.",
+connections:[3,6,7,11,12,16,17]
+},
+
+{
+id:11,
+name:"Family",
+thesis:"The family is one of humanity's earliest and most enduring social structures.",
+description:"Kinship organizes reproduction, caregiving, inheritance, identity and intergenerational continuity.",
+domains:[
+["Kinship","parents · children · siblings · grandparents · extended family"],
+["Reproduction","pair bonding · pregnancy · birth · parental investment"],
+["Child Rearing","caregiving · feeding · protection · attachment · social learning"],
+["Household","roles · responsibilities · cooperation · resources"],
+["Inheritance","property · memory · names · traditions · descent"],
+["Family Diversity","different family structures · marriage systems · kinship patterns"]
+],
+why:"Family provides one of the earliest environments in which biological life becomes social life.",
+connections:[7,9,10,12,13,14,17]
+},
+
+{
+id:12,
+name:"Community",
+thesis:"Humans become capable of large collective action through cooperation, trust and belonging.",
+description:"Community scales social life beyond immediate kin into villages, neighborhoods, associations and other small-group institutions.",
+domains:[
+["Small Groups","bands · tribes · villages · neighborhoods · associations"],
+["Cooperation","sharing · reciprocity · collective work · mutual aid"],
+["Trust","reputation · reciprocity · norms · social memory"],
+["Leadership","elders · chiefs · councils · informal authority"],
+["Conflict Resolution","negotiation · mediation · sanctions · reconciliation"],
+["Belonging","identity · ritual · place · memory · responsibility"]
+],
+why:"Community creates the social infrastructure from which larger institutions can emerge.",
+connections:[11,13,14,17,18,19]
+},
+
+{
+id:13,
+name:"Language",
+thesis:"Language allows humans to transmit meanings across bodies, generations and distances.",
+description:"Language transforms experience into symbols, making communication, narrative, teaching, memory and collective imagination possible.",
+domains:[
+["Communication","gesture · facial expression · speech · sign · writing · digital communication"],
+["Linguistics","phonology · morphology · grammar · syntax · semantics · pragmatics"],
+["Meaning","reference · metaphor · symbol · context · ambiguity · interpretation"],
+["Narrative","story · myth · history · fiction · memory · identity"],
+["Writing","scripts · records · books · archives · inscriptions"],
+["Language Change","dialects · language families · borrowing · contact · translation · language death"]
+],
+why:"Language allows human experience to become shared information rather than remaining inside individual bodies.",
+connections:[8,9,11,12,14,15,20,21]
+},
+
+{
+id:14,
+name:"Culture",
+thesis:"Culture is the accumulated social memory of ways humans understand and inhabit the world.",
+description:"Culture includes beliefs, rituals, traditions, identities, values, norms and processes of cultural change.",
+domains:[
+["Beliefs & Stories","beliefs · myths · stories · cosmologies · folk knowledge"],
+["Rituals & Traditions","ceremony · festivals · customs · foodways · dress"],
+["Identity","family · community · ethnic · national · hybrid identities"],
+["Values","morality · ethics · norms · taboos · ideals"],
+["Heritage","memory · monuments · artifacts · oral traditions · archives"],
+["Cultural Change","innovation · diffusion · acculturation · hybridization"]
+],
+why:"Culture allows knowledge and meaning to survive beyond individual lifetimes.",
+connections:[8,11,12,13,15,20,21]
+},
+
+{
+id:15,
+name:"Knowledge",
+thesis:"Humanity builds systems for transforming observation and experience into organized understanding.",
+description:"Knowledge includes science, mathematics, philosophy, scholarship, education, measurement, archives and methods for evaluating claims.",
+domains:[
+["Observation & Evidence","observation · measurement · evidence · experimentation"],
+["Mathematics","arithmetic · algebra · geometry · calculus · statistics · logic"],
+["Natural Sciences","physics · chemistry · biology · Earth science · astronomy"],
+["Social Sciences","psychology · sociology · anthropology · economics · political science"],
+["Humanities","history · philosophy · literature · languages · religious studies · criticism"],
+["Knowledge Systems","classification · models · theories · peer review · archives · libraries"]
+],
+why:"Knowledge turns experience into transmissible structures that can be tested, challenged, improved and inherited.",
+connections:[0,13,14,16,18,20,21,23]
+},
+
+{
+id:16,
+name:"Technology",
+thesis:"Technology is knowledge embodied in tools, machines, infrastructures and processes.",
+description:"Technology transforms human capacity by externalizing memory, strength, calculation, communication and production.",
+domains:[
+["Tools & Machines","stone tools · metal tools · machines · engines · automation · robotics"],
+["Energy Systems","fire · wind · water · fossil fuels · electricity · nuclear · renewables"],
+["Information Technology","printing · telegraph · telephone · radio · television · computers · internet · AI"],
+["Materials","metals · ceramics · polymers · semiconductors · advanced materials"],
+["Manufacturing","industrial production · automation · fabrication · 3D printing"],
+["Human-Technology Relations","augmentation · automation · dependence · safety · ethics"]
+],
+why:"Technology changes what humans can do and therefore changes economic, political and cultural structures.",
+connections:[2,10,15,17,18,19,20,21,22]
+},
+
+{
+id:17,
+name:"Economy",
+thesis:"Economy is the organization of production, exchange, resources, labor and risk.",
+description:"Economic systems coordinate how societies create, distribute, exchange and consume resources.",
+domains:[
+["Production","agriculture · manufacturing · services · labor · specialization"],
+["Exchange","barter · currency · markets · trade · contracts · prices"],
+["Finance","banking · investment · insurance · credit · capital · risk"],
+["Institutions","firms · cooperatives · households · banks · regulators"],
+["Labor","work · specialization · wages · professions · productivity"],
+["Global Economy","supply chains · international trade · finance · labor flows · digital commerce"]
+],
+why:"Economic structures transform resources into organized systems of production and exchange.",
+connections:[6,10,11,12,16,18,19,21]
+},
+
+{
+id:18,
+name:"Governance",
+thesis:"As communities become larger and more complex, humans create institutions for collective decision-making.",
+description:"Governance includes leadership, government, law, administration, citizenship, representation and political legitimacy.",
+domains:[
+["Leadership","chiefs · kings · councils · elected officials · bureaucracies"],
+["Government Systems","monarchy · republic · democracy · authoritarian systems · federalism · local government"],
+["Law","rights · duties · justice · courts · constitutions · regulation"],
+["Public Administration","taxation · services · infrastructure · records · security"],
+["Citizenship","membership · participation · representation · civic identity"],
+["Political Legitimacy","consent · accountability · authority · representation"]
+],
+why:"Governance creates mechanisms through which large populations coordinate power, resources, rules and collective decisions.",
+connections:[12,15,16,17,19,21,23]
+},
+
+{
+id:19,
+name:"Civilization",
+thesis:"Civilization emerges when human settlements, institutions, infrastructures and knowledge become deeply interconnected at large scale.",
+description:"Civilization describes cities, states, infrastructure, institutions, specialization, integration, resilience and collapse.",
+domains:[
+["Cities","settlements · towns · cities · metropolises · megacities"],
+["States & Nations","territory · population · institutions · nations · empires"],
+["Infrastructure","transportation · communication · utilities · water · energy · housing"],
+["Institutions","education · religion · government · economy · science · law · media"],
+["Urbanization","density · migration · specialization · metropolitan systems"],
+["Civilizational Dynamics","integration · innovation · collapse · resilience · transformation"]
+],
+why:"Civilization is the large-scale human environment in which modern life becomes possible.",
+connections:[12,16,17,18,20,21,22]
+},
+
+{
+id:20,
+name:"Human Creative Worlds",
+thesis:"Humans do not only organize resources and institutions; they create symbolic worlds.",
+description:"Art, literature, film, photography, games, sports, mythology and digital worlds allow humans to create realities of meaning beyond immediate physical survival.",
+domains:[
+["Art","painting · sculpture · music · dance · theater · film · photography"],
+["Literature","poetry · fiction · nonfiction · journalism · essays · biography"],
+["Entertainment","sports · games · festivals · spectacle · broadcasting"],
+["Narrative Worlds","mythological worlds · fictional universes · cinematic worlds"],
+["Digital Worlds","virtual environments · interactive media · games · simulations"],
+["Creative Ecosystems","artists · audiences · markets · archives · platforms · copyright"]
+],
+why:"Creative worlds become cultural memory, emotional infrastructure and laboratories for imagining alternative realities.",
+connections:[8,13,14,15,16,19,21,22,23]
+},
+
+{
+id:21,
+name:"Modern World",
+thesis:"The modern human is born into systems that span the planet and increasingly extend into digital space.",
+description:"The modern world combines global institutions, digital networks, mass communication, science, corporations, states and algorithmic systems.",
+domains:[
+["Global Systems","global economy · global communication · transportation · science · governance"],
+["Digital Civilization","internet · social media · virtual worlds · AI systems · digital identity"],
+["Institutions","schools · universities · corporations · NGOs · governments · hospitals"],
+["Network Society","platforms · networks · information flows · digital communities"],
+["Contemporary Childhood","education · screens · family · urban environments · global culture"],
+["Data Society","data systems · algorithms · platforms · digital footprints"]
+],
+why:"This is the environment in which contemporary humans increasingly live simultaneously in physical and digital systems.",
+connections:[13,14,15,16,17,18,19,20,22]
+},
+
+{
+id:22,
+name:"Future Humanity",
+thesis:"The future is not one destination; it is a space of possible human trajectories.",
+description:"Future humanity explores emerging technologies, sustainability, enhancement, planetary coordination and possible expansion beyond Earth.",
+domains:[
+["Emerging Technologies","biotechnology · robotics · nanotechnology · artificial intelligence"],
+["Human Enhancement","longevity research · cognitive tools · physical augmentation · brain-computer interfaces"],
+["Sustainable Civilization","ecological sustainability · energy transition · circular systems"],
+["Planetary Civilization","global coordination · planetary stewardship · shared infrastructure"],
+["Interplanetary Civilization","Moon · Mars · orbital habitats · asteroids · space resources"],
+["Future Studies","scenarios · foresight · trend analysis · possible futures · preferred futures"]
+],
+why:"Understanding possible futures allows humanity to examine consequences before technological and institutional changes become irreversible.",
+connections:[16,19,20,21,23]
+},
+
+{
+id:23,
+name:"Meta-Reality",
+thesis:"At the crown of the tree, humanity turns its attention back upon reality itself.",
+description:"Meta-reality is the reflective layer where questions of truth, knowledge, consciousness, ethics, beauty, meaning and the future of civilization converge.",
+domains:[
+["Metaphysics","being · existence · reality · possibility · necessity · identity · causality"],
+["Epistemology","truth · knowledge · belief · evidence · justification · skepticism"],
+["Logic","deduction · induction · abduction · consistency · inference"],
+["Ethics","right/wrong · justice · freedom · responsibility · compassion · dignity"],
+["Aesthetics","beauty · art · creativity · taste · expression · sublime experience"],
+["Philosophy of Mind","consciousness · self · subjective experience · agency · mind-body problem"],
+["Systems & Complexity","systems thinking · emergence · feedback · adaptation · self-organization"],
+["Wisdom & Futures","wisdom traditions · self-knowledge · flourishing · future studies"]
+],
+why:"The Tree ultimately becomes reflexive: humanity studies not only the world, but its own assumptions about what the world means and what it should become.",
+connections:[0,8,15,18,20,22]
+}
+
+];
+
+/* ==================================================
+   GLOBAL STATE
+================================================== */
+
+let currentLayer = 0;
+
+/* ==================================================
+   DOM REFERENCES
+================================================== */
+
+const layerList = document.getElementById("layerList");
+const detail = document.getElementById("detail");
+const search = document.getElementById("search");
+const treeMap = document.getElementById("treeMap");
+
+/* ==================================================
+   BUILD TREE MAP
+================================================== */
+
+function buildTree(){
+
+  layers.forEach((layer,index)=>{
+
+    const node = document.createElement("button");
+
+    node.className =
+      "tree-node " +
+      (
+        index === 0 ? "center" :
+        index === 23 ? "center" :
+        index % 2 === 0 ? "left" : "right"
+      );
+
+    node.dataset.id = index;
+
+    /*
+      Spread the nodes vertically.
+    */
+
+    const top = 40 + index * 31;
+
+    node.style.top =
+      Math.min(top,760) + "px";
+
+    /*
+      For the compact visual map, later layers
+      are distributed into left/right branches.
+    */
+
+    if(index !== 0 && index !== 23){
+
+      const row = Math.floor((index-1)/2);
+
+      node.style.top =
+        (80 + row * 62) + "px";
+
+      if(index % 2 === 0){
+        node.style.left =
+          "calc(50% - 430px)";
+        node.style.right = "auto";
+      }else{
+        node.style.right =
+          "calc(50% - 430px)";
+        node.style.left = "auto";
+      }
+
+    }
+
+    if(index === 0){
+      node.style.top = "25px";
+    }
+
+    if(index === 23){
+      node.style.top = "735px";
+    }
+
+    node.innerHTML = `
+      <span class="number">
+        ${String(index).padStart(2,"0")}
+      </span>
+      <span class="name">
+        ${layer.name}
+      </span>
+    `;
+
+    node.addEventListener("click",()=>{
+      showLayer(index);
+      scrollToExplorer();
+    });
+
+    treeMap.appendChild(node);
+
+  });
+
+}
+
+/* ==================================================
+   BUILD LAYER LIST
+================================================== */
+
+function buildLayerList(filter=""){
+
+  layerList.innerHTML="";
+
+  const query = filter.toLowerCase().trim();
+
+  layers.forEach((layer,index)=>{
+
+    const searchable = (
+      layer.name + " " +
+      layer.thesis + " " +
+      layer.description + " " +
+      layer.domains.flat().join(" ")
+    ).toLowerCase();
+
+    if(query && !searchable.includes(query)){
+      return;
+    }
+
+    const item = document.createElement("button");
+
+    item.className =
+      "layer-item " +
+      (index === currentLayer ? "active" : "");
+
+    item.innerHTML = `
+      <span class="small-number">
+        ${String(index).padStart(2,"0")}
+      </span>
+      <span class="small-name">
+        ${layer.name}
+      </span>
+    `;
+
+    item.addEventListener("click",()=>{
+      showLayer(index);
+    });
+
+    layerList.appendChild(item);
+
+  });
+
+}
+
+/* ==================================================
+   DISPLAY LAYER
+================================================== */
+
+function showLayer(index){
+
+  if(index < 0){
+    index = layers.length - 1;
+  }
+
+  if(index >= layers.length){
+    index = 0;
+  }
+
+  currentLayer = index;
+
+  const layer = layers[index];
+
+  detail.innerHTML = `
+
+    <div class="detail-top">
+
+      <div>
+
+        <div class="layer-number">
+          LAYER ${String(layer.id).padStart(2,"0")}
+        </div>
+
+        <h3>
+          ${layer.name}
+        </h3>
+
+      </div>
+
+    </div>
+
+    <div class="layer-thesis">
+      ${layer.thesis}
+    </div>
+
+    <div class="layer-description">
+      ${layer.description}
+    </div>
+
+    <div class="domain-grid">
+
+      ${layer.domains.map((domain,i)=>`
+
+        <details class="domain" ${i===0 ? "open":""}>
+
+          <summary>
+            ${domain[0]}
+          </summary>
+
+          <div class="domain-content">
+            ${domain[1]}
+          </div>
+
+        </details>
+
+      `).join("")}
+
+    </div>
+
+    <div class="why-box">
+
+      <strong>
+        Why this layer matters
+      </strong>
+
+      <p>
+        ${layer.why}
+      </p>
+
+    </div>
+
+    <div class="connections">
+
+      <div class="connections-title">
+        Connected layers
+      </div>
+
+      <div class="connection-list">
+
+        ${layer.connections.map(id=>`
+
+          <button
+            class="connection"
+            onclick="showLayer(${id});"
+          >
+            ${String(id).padStart(2,"0")}
+            ·
+            ${layers[id].name}
+          </button>
+
+        `).join("")}
+
+      </div>
+
+    </div>
+
+    <div class="detail-controls">
+
+      <button
+        class="control-btn"
+        onclick="previousLayer()"
+      >
+        ← Previous
+      </button>
+
+      <div class="progress">
+        ${index + 1} / ${layers.length}
+      </div>
+
+      <button
+        class="control-btn"
+        onclick="nextLayer()"
+      >
+        Next →
+      </button>
+
+    </div>
+  `;
+
+  buildLayerList(search.value);
+
+  updateTreeSelection();
+
+}
+
+/* ==================================================
+   TREE SELECTION
+================================================== */
+
+function updateTreeSelection(){
+
+  document
+    .querySelectorAll(".tree-node")
+    .forEach(node=>{
+      node.classList.toggle(
+        "active",
+        Number(node.dataset.id) === currentLayer
+      );
+    });
+
+}
+
+/* ==================================================
+   NAVIGATION
+================================================== */
+
+function nextLayer(){
+  showLayer(currentLayer + 1);
+}
+
+function previousLayer(){
+  showLayer(currentLayer - 1);
+}
+
+function randomLayer(){
+
+  const random =
+    Math.floor(Math.random()*layers.length);
+
+  showLayer(random);
+  scrollToExplorer();
+
+}
+
+function scrollToExplorer(){
+
+  document
+    .getElementById("explorer")
+    .scrollIntoView({
+      behavior:"smooth",
+      block:"start"
+    });
+
+}
+
+/* ==================================================
+   SEARCH
+================================================== */
+
+search.addEventListener("input",()=>{
+
+  buildLayerList(search.value);
+
+});
+
+/* ==================================================
+   KEYBOARD NAVIGATION
+================================================== */
+
+document.addEventListener("keydown",(event)=>{
+
+  if(
+    event.target.tagName === "INPUT" ||
+    event.target.tagName === "TEXTAREA"
+  ){
+    return;
+  }
+
+  if(event.key === "ArrowDown"){
+    event.preventDefault();
+    nextLayer();
+  }
+
+  if(event.key === "ArrowUp"){
+    event.preventDefault();
+    previousLayer();
+  }
+
+  if(event.key === "Home"){
+    showLayer(0);
+  }
+
+  if(event.key === "End"){
+    showLayer(layers.length-1);
+  }
+
+  if(event.key === "/"){
+    event.preventDefault();
+    search.focus();
+  }
+
+});
+
+/* ==================================================
+   HELP PANEL
+================================================== */
+
+const helpButton =
+  document.getElementById("helpButton");
+
+const helpPanel =
+  document.getElementById("helpPanel");
+
+helpButton.addEventListener("click",()=>{
+  helpPanel.classList.toggle("show");
+});
+
+/* ==================================================
+   REVEAL ON SCROLL
+================================================== */
+
+const observer =
+  new IntersectionObserver(
+    entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add("visible");
+        }
+      });
+    },
+    {
+      threshold:.12
+    }
+  );
+
+document
+  .querySelectorAll(".reveal")
+  .forEach(element=>{
+    observer.observe(element);
+  });
+
+/* ==================================================
+   PARALLAX HERO
+================================================== */
+
+window.addEventListener(
+  "scroll",
+  ()=>{
+    const scroll =
+      window.scrollY;
+
+    const hero =
+      document.querySelector(".hero-content");
+
+    if(hero && scroll < window.innerHeight){
+
+      hero.style.transform =
+        `translateY(${scroll * .18}px)`;
+
+      hero.style.opacity =
+        Math.max(
+          0,
+          1 - scroll / (window.innerHeight * .8)
+        );
+
+    }
+  },
+  {passive:true}
+);
+
+/* ==================================================
+   INITIALIZATION
+================================================== */
+
+buildTree();
+
+buildLayerList();
+
+showLayer(0);
+
+/* ==================================================
+   LOADER
+================================================== */
+
+window.addEventListener("load",()=>{
+
+  setTimeout(()=>{
+    document
+      .getElementById("loader")
+      .classList.add("hidden");
+  },1900);
+
+});
+
+</script>
+
+</body>
+</html>
